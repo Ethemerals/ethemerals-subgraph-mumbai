@@ -1,4 +1,4 @@
-specVersion: 0.0.1
+specVersion: 0.0.2
 schema:
   file: ./schema.graphql
 dataSources:
@@ -6,8 +6,9 @@ dataSources:
     name: MeralManager
     network: mumbai
     source:
-      address: "0x52B4a8909AD349C8988A94Bdf68C490e94a96812"
+      address: '0x52B4a8909AD349C8988A94Bdf68C490e94a96812'
       abi: MeralManager
+      startBlock: 25674262
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -56,4 +57,4 @@ dataSources:
           handler: handleOwnershipTransferred
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/mapping.ts
+      file: ./src/mappings/meralManager.ts

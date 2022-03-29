@@ -158,28 +158,6 @@ export class ChangeHP__Params {
   }
 }
 
-export class ChangeMeralStatus extends ethereum.Event {
-  get params(): ChangeMeralStatus__Params {
-    return new ChangeMeralStatus__Params(this);
-  }
-}
-
-export class ChangeMeralStatus__Params {
-  _event: ChangeMeralStatus;
-
-  constructor(event: ChangeMeralStatus) {
-    this._event = event;
-  }
-
-  get id(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get status(): i32 {
-    return this._event.parameters[1].value.toI32();
-  }
-}
-
 export class ChangeStats extends ethereum.Event {
   get params(): ChangeStats__Params {
     return new ChangeStats__Params(this);
@@ -317,6 +295,28 @@ export class InitMeral__Params {
 
   get owner(): Address {
     return this._event.parameters[11].value.toAddress();
+  }
+}
+
+export class MeralStatusChange extends ethereum.Event {
+  get params(): MeralStatusChange__Params {
+    return new MeralStatusChange__Params(this);
+  }
+}
+
+export class MeralStatusChange__Params {
+  _event: MeralStatusChange;
+
+  constructor(event: MeralStatusChange) {
+    this._event = event;
+  }
+
+  get id(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get status(): i32 {
+    return this._event.parameters[1].value.toI32();
   }
 }
 
@@ -1186,6 +1186,29 @@ export class MeralManager extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
+
+  validatorsAddresses(param0: Address): boolean {
+    let result = super.call(
+      "validatorsAddresses",
+      "validatorsAddresses(address):(bool)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_validatorsAddresses(param0: Address): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "validatorsAddresses",
+      "validatorsAddresses(address):(bool)",
+      [ethereum.Value.fromAddress(param0)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
 }
 
 export class ConstructorCall extends ethereum.Call {
@@ -1248,6 +1271,40 @@ export class AddGMCall__Outputs {
   }
 }
 
+export class AddValidatorsCall extends ethereum.Call {
+  get inputs(): AddValidatorsCall__Inputs {
+    return new AddValidatorsCall__Inputs(this);
+  }
+
+  get outputs(): AddValidatorsCall__Outputs {
+    return new AddValidatorsCall__Outputs(this);
+  }
+}
+
+export class AddValidatorsCall__Inputs {
+  _call: AddValidatorsCall;
+
+  constructor(call: AddValidatorsCall) {
+    this._call = call;
+  }
+
+  get _validators(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get add(): boolean {
+    return this._call.inputValues[1].value.toBoolean();
+  }
+}
+
+export class AddValidatorsCall__Outputs {
+  _call: AddValidatorsCall;
+
+  constructor(call: AddValidatorsCall) {
+    this._call = call;
+  }
+}
+
 export class ApproveCall extends ethereum.Call {
   get inputs(): ApproveCall__Inputs {
     return new ApproveCall__Inputs(this);
@@ -1282,20 +1339,20 @@ export class ApproveCall__Outputs {
   }
 }
 
-export class BurnMeralCall extends ethereum.Call {
-  get inputs(): BurnMeralCall__Inputs {
-    return new BurnMeralCall__Inputs(this);
+export class BurnCall extends ethereum.Call {
+  get inputs(): BurnCall__Inputs {
+    return new BurnCall__Inputs(this);
   }
 
-  get outputs(): BurnMeralCall__Outputs {
-    return new BurnMeralCall__Outputs(this);
+  get outputs(): BurnCall__Outputs {
+    return new BurnCall__Outputs(this);
   }
 }
 
-export class BurnMeralCall__Inputs {
-  _call: BurnMeralCall;
+export class BurnCall__Inputs {
+  _call: BurnCall;
 
-  constructor(call: BurnMeralCall) {
+  constructor(call: BurnCall) {
     this._call = call;
   }
 
@@ -1304,10 +1361,10 @@ export class BurnMeralCall__Inputs {
   }
 }
 
-export class BurnMeralCall__Outputs {
-  _call: BurnMeralCall;
+export class BurnCall__Outputs {
+  _call: BurnCall;
 
-  constructor(call: BurnMeralCall) {
+  constructor(call: BurnCall) {
     this._call = call;
   }
 }
@@ -1658,40 +1715,6 @@ export class RegisterMeralCall__Outputs {
   }
 }
 
-export class ReleaseFromPortalCall extends ethereum.Call {
-  get inputs(): ReleaseFromPortalCall__Inputs {
-    return new ReleaseFromPortalCall__Inputs(this);
-  }
-
-  get outputs(): ReleaseFromPortalCall__Outputs {
-    return new ReleaseFromPortalCall__Outputs(this);
-  }
-}
-
-export class ReleaseFromPortalCall__Inputs {
-  _call: ReleaseFromPortalCall;
-
-  constructor(call: ReleaseFromPortalCall) {
-    this._call = call;
-  }
-
-  get to(): Address {
-    return this._call.inputValues[0].value.toAddress();
-  }
-
-  get _id(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-}
-
-export class ReleaseFromPortalCall__Outputs {
-  _call: ReleaseFromPortalCall;
-
-  constructor(call: ReleaseFromPortalCall) {
-    this._call = call;
-  }
-}
-
 export class RenounceOwnershipCall extends ethereum.Call {
   get inputs(): RenounceOwnershipCall__Inputs {
     return new RenounceOwnershipCall__Inputs(this);
@@ -1718,20 +1741,20 @@ export class RenounceOwnershipCall__Outputs {
   }
 }
 
-export class ReturnToPortalCall extends ethereum.Call {
-  get inputs(): ReturnToPortalCall__Inputs {
-    return new ReturnToPortalCall__Inputs(this);
+export class RevertMeralCall extends ethereum.Call {
+  get inputs(): RevertMeralCall__Inputs {
+    return new RevertMeralCall__Inputs(this);
   }
 
-  get outputs(): ReturnToPortalCall__Outputs {
-    return new ReturnToPortalCall__Outputs(this);
+  get outputs(): RevertMeralCall__Outputs {
+    return new RevertMeralCall__Outputs(this);
   }
 }
 
-export class ReturnToPortalCall__Inputs {
-  _call: ReturnToPortalCall;
+export class RevertMeralCall__Inputs {
+  _call: RevertMeralCall;
 
-  constructor(call: ReturnToPortalCall) {
+  constructor(call: RevertMeralCall) {
     this._call = call;
   }
 
@@ -1740,10 +1763,10 @@ export class ReturnToPortalCall__Inputs {
   }
 }
 
-export class ReturnToPortalCall__Outputs {
-  _call: ReturnToPortalCall;
+export class RevertMeralCall__Outputs {
+  _call: RevertMeralCall;
 
-  constructor(call: ReturnToPortalCall) {
+  constructor(call: RevertMeralCall) {
     this._call = call;
   }
 }

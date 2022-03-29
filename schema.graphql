@@ -158,6 +158,7 @@ type PetAction @entity {
 enum ActionType {
 	Default
 	Minted
+	Burnt
 	Transfer
 	SendELF
 	ReceiveELF

@@ -13,57 +13,18 @@ import {
 	ChangeELF,
 	ChangeElement,
 	ChangeHP,
-	ChangeMeralStatus,
 	ChangeStats,
 	ChangeXP,
 	ContractRegistered,
 	InitMeral,
 	OwnershipTransferred,
 	Transfer,
+	MeralStatusChange,
 } from '../../generated/MeralManager/MeralManager';
 
 import { Account, AccountAction } from '../../generated/schema';
 import { getCmId, getCoin } from '../metadata/getMeralData';
-
-// export function handleTransfer(event: Transfer): void {
-// 	// SKIP ZERO INDEX
-// 	if (event.params.tokenId < ONE_BI) {
-// 		return;
-// 	}
-// 	let token = ensureMeral(event, event.params.tokenId);
-// 	// TOKEN ACTIONS
-// 	let tokenAction = ensureMeralAction(event, token.id);
-// 	tokenAction.type = 'Transfer';
-// 	// NORMAL TRANSFER TO
-// 	let accountTo = ensureAccount(event, addressId(event.params.to));
-// 	let accountToAction = ensureAccountAction(event, accountTo.id);
-// 	accountToAction.type = 'Receive';
-// 	accountToAction.meral = token.id;
-// 	// NORMAL TRANSFER FROM
-// 	let accountFrom = ensureAccount(event, addressId(event.params.from));
-// 	let accountFromAction = ensureAccountAction(event, accountFrom.id);
-// 	accountFromAction.type = 'Send';
-// 	accountFromAction.meral = token.id;
-// 	// TO DELEGATE
-// 	// ORDER OF ACTION
-// 	token.previousOwner = accountFrom.id;
-// 	accountToAction.meral = token.id;
-// 	accountFromAction.meral = token.id;
-// 	token.owner = addressId(event.params.to);
-// 	// MINT
-// 	if (accountFrom.id == ADDRESS_ZERO) {
-// 		token.previousOwner = ADDRESS_ZERO;
-// 		token.creator = accountTo.id;
-// 		token.owner = accountTo.id;
-// 		tokenAction.type = 'Minted';
-// 	}
-// 	accountTo.save();
-// 	accountFrom.save();
-// 	accountFromAction.save();
-// 	accountToAction.save();
-// 	tokenAction.save();
-// 	token.save();
-// }
+import { getContractBaseURI, getContractName } from '../contractData/contractData';
 
 export function handleApproval(event: Approval): void {
 	// The following functions can then be called on this contract to access
@@ -105,20 +66,74 @@ export function handleChangeElement(event: ChangeElement): void {}
 
 export function handleChangeHP(event: ChangeHP): void {}
 
-export function handleChangeMeralStatus(event: ChangeMeralStatus): void {}
-
 export function handleChangeStats(event: ChangeStats): void {}
 
 export function handleChangeXP(event: ChangeXP): void {}
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {}
 
-export function handleTransfer(event: Transfer): void {}
+export function handleMeralStatusChange(event: MeralStatusChange): void {
+	let token = ensureMeral(event, event.params.id);
+	token.status = BigInt.fromI32(event.params.status);
+	token.save();
+}
+
+export function handleTransfer(event: Transfer): void {
+	let token = ensureMeral(event, event.params.tokenId);
+	// TOKEN ACTIONS
+	let tokenAction = ensureMeralAction(event, token.id);
+	tokenAction.type = 'Transfer';
+
+	// NORMAL TRANSFER TO
+	let accountTo = ensureAccount(event, addressId(event.params.to));
+	let accountToAction = ensureAccountAction(event, accountTo.id);
+	accountToAction.type = 'Receive';
+	accountToAction.meral = token.id;
+
+	// NORMAL TRANSFER FROM
+	let accountFrom = ensureAccount(event, addressId(event.params.from));
+	let accountFromAction = ensureAccountAction(event, accountFrom.id);
+	accountFromAction.type = 'Send';
+	accountFromAction.meral = token.id;
+
+	// ORDER OF ACTION
+	token.previousOwner = accountFrom.id;
+	accountToAction.meral = token.id;
+	accountFromAction.meral = token.id;
+	token.owner = addressId(event.params.to);
+
+	// MINT
+	if (accountFrom.id == ADDRESS_ZERO) {
+		token.previousOwner = ADDRESS_ZERO;
+		token.creator = accountTo.id;
+		token.owner = accountTo.id;
+		token.verifiedOwner = accountTo.id;
+		tokenAction.type = 'Minted';
+		token.status = BigInt.fromI32(2);
+	}
+
+	// BURN
+	if (accountTo.id == ADDRESS_ZERO) {
+		token.owner = accountTo.id;
+		tokenAction.type = 'Burnt';
+		token.status = ZERO_BI;
+		token.burnt = true;
+	}
+
+	accountTo.save();
+	accountFrom.save();
+	accountFromAction.save();
+	accountToAction.save();
+	tokenAction.save();
+	token.save();
+}
 
 export function handleContractRegistered(event: ContractRegistered): void {
 	let contract = ensureERC721Contract(event, addressId(event.params.contractAddress));
 	contract.type = event.params.meralType;
 	contract.address = addressId(event.params.contractAddress);
+	contract.baseURI = getContractBaseURI(contract.type);
+	contract.name = getContractName(contract.type);
 	contract.save();
 }
 
@@ -128,6 +143,7 @@ export function handleInitMeral(event: InitMeral): void {
 	let tokenAction = ensureMeralAction(event, token.id);
 	let creator = ensureAccount(event, addressId(event.params.owner));
 
+	token.status = ONE_BI;
 	token.creator = creator.id;
 	token.owner = creator.id;
 	token.type = event.params.meralType;

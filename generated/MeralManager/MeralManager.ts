@@ -920,6 +920,29 @@ export class MeralManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
+  getVerifiedOwner(_id: BigInt): Address {
+    let result = super.call(
+      "getVerifiedOwner",
+      "getVerifiedOwner(uint256):(address)",
+      [ethereum.Value.fromUnsignedBigInt(_id)]
+    );
+
+    return result[0].toAddress();
+  }
+
+  try_getVerifiedOwner(_id: BigInt): ethereum.CallResult<Address> {
+    let result = super.tryCall(
+      "getVerifiedOwner",
+      "getVerifiedOwner(uint256):(address)",
+      [ethereum.Value.fromUnsignedBigInt(_id)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   gmAddresses(param0: Address): boolean {
     let result = super.call("gmAddresses", "gmAddresses(address):(bool)", [
       ethereum.Value.fromAddress(param0)

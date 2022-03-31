@@ -44,15 +44,21 @@ type Meral @entity {
 	cmId: BigInt!
 	coin: String!
 	name: String!
+	artist: String
 	element: BigInt!
 	mainclass: BigInt!
 	subclass: BigInt!
+	hair: String
+	eyes: String
+	skin: String
+	costume: String
 	#EXTRA
 	scorecard: Scorecard!
 	actions: [MeralAction!] @derivedFrom(field: "meral")
 	#
 	burnt: Boolean!
 	status: BigInt!
+	proxy: Boolean!
 }
 
 type Scorecard @entity {
@@ -90,25 +96,19 @@ type Account @entity {
 type MeralAction @entity {
 	id: ID!
 	meral: Meral!
-	score: BigInt
-	win: Boolean
-	rewards: BigInt
-	staked: Boolean
-	priceFeed: BigInt
-	long: Boolean
 	timestamp: BigInt!
 	transaction: Transaction!
 	type: ActionType!
+	description: String
 }
 
 type AccountAction @entity {
 	id: ID!
 	account: Account!
-	meral: Meral
-	pet: Pet
 	timestamp: BigInt!
 	transaction: Transaction!
 	type: ActionType!
+	description: String
 }
 
 ##############################
@@ -148,7 +148,39 @@ type PetAction @entity {
 }
 
 ##############################
-##         Wilds              ##
+##      Eternal Battle      ##
+##############################
+type EBStakeActive @entity {
+	id: ID!
+	active: Boolean!
+	timestamp: BigInt!
+	meral: Meral!
+	owner: Account!
+	priceFeedId: BigInt!
+	positionSize: BigInt!
+	startingPrice: BigInt!
+	long: Boolean!
+}
+
+type EBStakeRecord @entity {
+	id: ID!
+	startTime: BigInt!
+	endTime: BigInt!
+	meral: Meral!
+	owner: Account!
+	priceFeedId: BigInt!
+	positionSize: BigInt!
+	startingPrice: BigInt!
+	long: Boolean!
+	# result
+	hp: BigInt!
+	elf: BigInt!
+	revived: Boolean!
+	reviver: Meral
+}
+
+##############################
+##         Wilds            ##
 ##############################
 
 ##############################

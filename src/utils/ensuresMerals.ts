@@ -5,7 +5,7 @@ import { ADDRESS_ZERO, ZERO_BI, ZERO_BD, ONE_BI, TEN_BI, INI_SCORE, INI_MAXHP, I
 import { Meral, MeralAction, Scorecard } from '../../generated/schema';
 
 import { ensureTransaction } from './ensuresCommon';
-import { getIdFromType, getTokenIdFromId, transactionId } from './helpers';
+import { getIdFromType, getTokenIdFromId, getTypeFromId, transactionId } from './helpers';
 import { getArtist, getCmId, getCoin, getCostume, getElement, getEyes, getHair, getMainclass, getSkin, getSubclass } from '../metadata/getMeralData';
 
 export function ensureMeral(event: ethereum.Event, meralId: BigInt): Meral {
@@ -34,9 +34,11 @@ export function newMeral(event: ethereum.Event, meralId: BigInt): Meral {
 	let id = meralId.toString();
 
 	let meral = new Meral(id);
-	meral.tokenId = getTokenIdFromId(meralId);
+	let type = getTypeFromId(meralId);
+	let tokenId = getTokenIdFromId(meralId);
+	meral.tokenId = tokenId;
 	meral.meralId = meralId;
-	meral.type = ZERO_BI;
+	meral.type = type;
 	meral.timestamp = event.block.timestamp;
 	meral.blockNumber = event.block.number;
 	meral.creator = ADDRESS_ZERO;
@@ -60,10 +62,19 @@ export function newMeral(event: ethereum.Event, meralId: BigInt): Meral {
 	meral.mainclass = getMainclass(ONE_BI);
 	meral.subclass = getSubclass(ONE_BI);
 
+	if (type === ONE_BI) {
+		meral.artist = getArtist(tokenId);
+		meral.hair = getHair(tokenId);
+		meral.eyes = getEyes(tokenId);
+		meral.skin = getSkin(tokenId);
+		meral.costume = getCostume(tokenId);
+	}
+
 	meral.scorecard = ensureScorecard(meral.id).id;
 
 	meral.burnt = false;
 	meral.status = ZERO_BI;
+	meral.proxy = true;
 
 	meral.save();
 
@@ -105,7 +116,6 @@ export function ensureMeralAction(event: ethereum.Event, meralId: string): Meral
 	action.meral = meralId;
 	action.timestamp = event.block.timestamp;
 	action.transaction = ensureTransaction(event).id;
-	action.staked = false;
 	action.type = 'Default';
 	action.save();
 

@@ -4,7 +4,7 @@ import { addressId, getIdFromType, getMainclassFromSubclass, transactionId } fro
 import { ensureAccount, ensureAccountAction, ensureERC721Contract, ensureOperator } from '../utils/ensuresAccount';
 import { ensureMeral, ensureMeralAction, ensureMeralByType, ensureScorecard } from '../utils/ensuresMerals';
 
-import { ADDRESS_ZERO, ZERO_BI, ZERO_BD, ONE_BI, TEN_BI, INI_SCORE, INI_MAXHP, INI_MAXSTAM } from '../utils/constants';
+import { ADDRESS_ZERO, ZERO_BI, ZERO_BD, ONE_BI, TEN_BI, INI_SCORE, INI_MAXHP, INI_MAXSTAM, ETERNALBATTLE_ADDRESS, BURN_ADDRESS } from '../utils/constants';
 import {
 	MeralManager,
 	Approval,
@@ -60,15 +60,37 @@ export function handleApprovalForAll(event: ApprovalForAll): void {}
 
 export function handleAuthChange(event: AuthChange): void {}
 
-export function handleChangeELF(event: ChangeELF): void {}
+export function handleChangeELF(event: ChangeELF): void {
+	let token = ensureMeral(event, event.params.id);
+	token.elf = event.params.elf;
+	token.save();
+}
 
-export function handleChangeElement(event: ChangeElement): void {}
+export function handleChangeElement(event: ChangeElement): void {
+	let token = ensureMeral(event, event.params.id);
+	token.element = BigInt.fromI32(event.params.element);
+	token.save();
+}
 
-export function handleChangeHP(event: ChangeHP): void {}
+export function handleChangeHP(event: ChangeHP): void {
+	let token = ensureMeral(event, event.params.id);
+	token.hp = BigInt.fromI32(event.params.hp);
+	token.save();
+}
 
-export function handleChangeStats(event: ChangeStats): void {}
+export function handleChangeStats(event: ChangeStats): void {
+	let token = ensureMeral(event, event.params.id);
+	token.atk = BigInt.fromI32(event.params.atk);
+	token.def = BigInt.fromI32(event.params.def);
+	token.spd = BigInt.fromI32(event.params.spd);
+	token.save();
+}
 
-export function handleChangeXP(event: ChangeXP): void {}
+export function handleChangeXP(event: ChangeXP): void {
+	let token = ensureMeral(event, event.params.id);
+	token.xp = event.params.xp;
+	token.save();
+}
 
 export function handleOwnershipTransferred(event: OwnershipTransferred): void {}
 
@@ -80,26 +102,27 @@ export function handleMeralStatusChange(event: MeralStatusChange): void {
 
 export function handleTransfer(event: Transfer): void {
 	let token = ensureMeral(event, event.params.tokenId);
-	// TOKEN ACTIONS
 	let tokenAction = ensureMeralAction(event, token.id);
-	tokenAction.type = 'Transfer';
 
 	// NORMAL TRANSFER TO
 	let accountTo = ensureAccount(event, addressId(event.params.to));
 	let accountToAction = ensureAccountAction(event, accountTo.id);
-	accountToAction.type = 'Receive';
-	accountToAction.meral = token.id;
 
 	// NORMAL TRANSFER FROM
 	let accountFrom = ensureAccount(event, addressId(event.params.from));
 	let accountFromAction = ensureAccountAction(event, accountFrom.id);
+
+	tokenAction.type = 'Transfer';
+	tokenAction.description = `Transfered from ${accountFrom.id}`;
+
+	accountToAction.type = 'Receive';
+	accountToAction.description = `Received ${token.tokenId} from ${accountFrom.id}`;
+
 	accountFromAction.type = 'Send';
-	accountFromAction.meral = token.id;
+	accountFromAction.description = `Sent ${token.tokenId} to ${accountTo.id}`;
 
 	// ORDER OF ACTION
 	token.previousOwner = accountFrom.id;
-	accountToAction.meral = token.id;
-	accountFromAction.meral = token.id;
 	token.owner = addressId(event.params.to);
 
 	// MINT
@@ -108,24 +131,52 @@ export function handleTransfer(event: Transfer): void {
 		token.creator = accountTo.id;
 		token.owner = accountTo.id;
 		token.verifiedOwner = accountTo.id;
-		tokenAction.type = 'Minted';
 		token.status = BigInt.fromI32(2);
+		tokenAction.type = 'Minted';
+		tokenAction.description = `Birthed by ${accountTo.id}`;
+		accountToAction.type = 'Minted';
+		accountToAction.description = `Minted Meral #${token.tokenId}`;
 	}
 
 	// BURN
 	if (accountTo.id == ADDRESS_ZERO) {
 		token.owner = accountTo.id;
-		tokenAction.type = 'Burnt';
 		token.status = ZERO_BI;
 		token.burnt = true;
+		accountFromAction.type = 'Burnt';
+		accountFromAction.description = `Burnt Meral #${token.tokenId}`;
 	}
 
+	// STAKING ADDRESSES
+
+	// UNSTAKE ETERNAL BATTLE
+	if (accountFrom.id == ETERNALBATTLE_ADDRESS) {
+		tokenAction.type = 'Unstaked';
+		tokenAction.description = `Return from Eternal Battle`;
+		accountToAction.type = 'Unstaked';
+		accountToAction.description = `Retrieve ${token.tokenId} from Eternal Battle`;
+	}
+
+	// STAKE ETERNAL BATTLE
+	if (accountTo.id == ETERNALBATTLE_ADDRESS) {
+		tokenAction.type = 'Staked';
+		tokenAction.description = `Enter the Eternal Battle`;
+		accountFromAction.type = 'Staked';
+		accountFromAction.description = `Sent ${token.tokenId} to Eternal Battle`;
+	}
+
+	// BURN ADDRESS
+	if (accountTo.id == BURN_ADDRESS) {
+		accountFromAction.type = 'Burnt';
+		accountFromAction.description = `Burnt Meral #${token.tokenId}`;
+	}
+
+	token.save();
+	tokenAction.save();
 	accountTo.save();
 	accountFrom.save();
 	accountFromAction.save();
 	accountToAction.save();
-	tokenAction.save();
-	token.save();
 }
 
 export function handleContractRegistered(event: ContractRegistered): void {
@@ -140,7 +191,6 @@ export function handleContractRegistered(event: ContractRegistered): void {
 export function handleInitMeral(event: InitMeral): void {
 	let token = ensureMeralByType(event, event.params.meralType, event.params.tokenId);
 	let scorecard = ensureScorecard(token.id);
-	let tokenAction = ensureMeralAction(event, token.id);
 	let creator = ensureAccount(event, addressId(event.params.owner));
 
 	token.status = ONE_BI;
@@ -165,11 +215,9 @@ export function handleInitMeral(event: InitMeral): void {
 	token.subclass = BigInt.fromI32(event.params.subclass);
 	token.mainclass = getMainclassFromSubclass(token.subclass);
 
-	tokenAction.type = 'Minted';
 	scorecard.highestRewards = token.elf;
 
 	token.save();
-	tokenAction.save();
 	scorecard.save();
 	creator.save();
 }

@@ -235,6 +235,7 @@ export class Meral extends Entity {
     this.set("scorecard", Value.fromString(""));
     this.set("burnt", Value.fromBoolean(false));
     this.set("status", Value.fromBigInt(BigInt.zero()));
+    this.set("proxy", Value.fromBoolean(false));
   }
 
   save(): void {
@@ -443,6 +444,23 @@ export class Meral extends Entity {
     this.set("name", Value.fromString(value));
   }
 
+  get artist(): string | null {
+    let value = this.get("artist");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set artist(value: string | null) {
+    if (!value) {
+      this.unset("artist");
+    } else {
+      this.set("artist", Value.fromString(<string>value));
+    }
+  }
+
   get element(): BigInt {
     let value = this.get("element");
     return value!.toBigInt();
@@ -468,6 +486,74 @@ export class Meral extends Entity {
 
   set subclass(value: BigInt) {
     this.set("subclass", Value.fromBigInt(value));
+  }
+
+  get hair(): string | null {
+    let value = this.get("hair");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set hair(value: string | null) {
+    if (!value) {
+      this.unset("hair");
+    } else {
+      this.set("hair", Value.fromString(<string>value));
+    }
+  }
+
+  get eyes(): string | null {
+    let value = this.get("eyes");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set eyes(value: string | null) {
+    if (!value) {
+      this.unset("eyes");
+    } else {
+      this.set("eyes", Value.fromString(<string>value));
+    }
+  }
+
+  get skin(): string | null {
+    let value = this.get("skin");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set skin(value: string | null) {
+    if (!value) {
+      this.unset("skin");
+    } else {
+      this.set("skin", Value.fromString(<string>value));
+    }
+  }
+
+  get costume(): string | null {
+    let value = this.get("costume");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set costume(value: string | null) {
+    if (!value) {
+      this.unset("costume");
+    } else {
+      this.set("costume", Value.fromString(<string>value));
+    }
   }
 
   get scorecard(): string {
@@ -512,6 +598,15 @@ export class Meral extends Entity {
 
   set status(value: BigInt) {
     this.set("status", Value.fromBigInt(value));
+  }
+
+  get proxy(): boolean {
+    let value = this.get("proxy");
+    return value!.toBoolean();
+  }
+
+  set proxy(value: boolean) {
+    this.set("proxy", Value.fromBoolean(value));
   }
 }
 
@@ -841,9 +936,6 @@ export class MeralAction extends Entity {
     this.set("id", Value.fromString(id));
 
     this.set("meral", Value.fromString(""));
-    this.set("win", Value.fromBoolean(false));
-    this.set("staked", Value.fromBoolean(false));
-    this.set("long", Value.fromBoolean(false));
     this.set("timestamp", Value.fromBigInt(BigInt.zero()));
     this.set("transaction", Value.fromString(""));
     this.set("type", Value.fromString(""));
@@ -884,84 +976,6 @@ export class MeralAction extends Entity {
     this.set("meral", Value.fromString(value));
   }
 
-  get score(): BigInt | null {
-    let value = this.get("score");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set score(value: BigInt | null) {
-    if (!value) {
-      this.unset("score");
-    } else {
-      this.set("score", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get win(): boolean {
-    let value = this.get("win");
-    return value!.toBoolean();
-  }
-
-  set win(value: boolean) {
-    this.set("win", Value.fromBoolean(value));
-  }
-
-  get rewards(): BigInt | null {
-    let value = this.get("rewards");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set rewards(value: BigInt | null) {
-    if (!value) {
-      this.unset("rewards");
-    } else {
-      this.set("rewards", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get staked(): boolean {
-    let value = this.get("staked");
-    return value!.toBoolean();
-  }
-
-  set staked(value: boolean) {
-    this.set("staked", Value.fromBoolean(value));
-  }
-
-  get priceFeed(): BigInt | null {
-    let value = this.get("priceFeed");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set priceFeed(value: BigInt | null) {
-    if (!value) {
-      this.unset("priceFeed");
-    } else {
-      this.set("priceFeed", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
-  get long(): boolean {
-    let value = this.get("long");
-    return value!.toBoolean();
-  }
-
-  set long(value: boolean) {
-    this.set("long", Value.fromBoolean(value));
-  }
-
   get timestamp(): BigInt {
     let value = this.get("timestamp");
     return value!.toBigInt();
@@ -987,6 +1001,23 @@ export class MeralAction extends Entity {
 
   set type(value: string) {
     this.set("type", Value.fromString(value));
+  }
+
+  get description(): string | null {
+    let value = this.get("description");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set description(value: string | null) {
+    if (!value) {
+      this.unset("description");
+    } else {
+      this.set("description", Value.fromString(<string>value));
+    }
   }
 }
 
@@ -1036,40 +1067,6 @@ export class AccountAction extends Entity {
     this.set("account", Value.fromString(value));
   }
 
-  get meral(): string | null {
-    let value = this.get("meral");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set meral(value: string | null) {
-    if (!value) {
-      this.unset("meral");
-    } else {
-      this.set("meral", Value.fromString(<string>value));
-    }
-  }
-
-  get pet(): string | null {
-    let value = this.get("pet");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set pet(value: string | null) {
-    if (!value) {
-      this.unset("pet");
-    } else {
-      this.set("pet", Value.fromString(<string>value));
-    }
-  }
-
   get timestamp(): BigInt {
     let value = this.get("timestamp");
     return value!.toBigInt();
@@ -1095,6 +1092,23 @@ export class AccountAction extends Entity {
 
   set type(value: string) {
     this.set("type", Value.fromString(value));
+  }
+
+  get description(): string | null {
+    let value = this.get("description");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set description(value: string | null) {
+    if (!value) {
+      this.unset("description");
+    } else {
+      this.set("description", Value.fromString(<string>value));
+    }
   }
 }
 
@@ -1411,6 +1425,281 @@ export class PetAction extends Entity {
 
   set type(value: string) {
     this.set("type", Value.fromString(value));
+  }
+}
+
+export class EBStakeActive extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("active", Value.fromBoolean(false));
+    this.set("timestamp", Value.fromBigInt(BigInt.zero()));
+    this.set("meral", Value.fromString(""));
+    this.set("owner", Value.fromString(""));
+    this.set("priceFeedId", Value.fromBigInt(BigInt.zero()));
+    this.set("positionSize", Value.fromBigInt(BigInt.zero()));
+    this.set("startingPrice", Value.fromBigInt(BigInt.zero()));
+    this.set("long", Value.fromBoolean(false));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save EBStakeActive entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save EBStakeActive entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("EBStakeActive", id.toString(), this);
+    }
+  }
+
+  static load(id: string): EBStakeActive | null {
+    return changetype<EBStakeActive | null>(store.get("EBStakeActive", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get active(): boolean {
+    let value = this.get("active");
+    return value!.toBoolean();
+  }
+
+  set active(value: boolean) {
+    this.set("active", Value.fromBoolean(value));
+  }
+
+  get timestamp(): BigInt {
+    let value = this.get("timestamp");
+    return value!.toBigInt();
+  }
+
+  set timestamp(value: BigInt) {
+    this.set("timestamp", Value.fromBigInt(value));
+  }
+
+  get meral(): string {
+    let value = this.get("meral");
+    return value!.toString();
+  }
+
+  set meral(value: string) {
+    this.set("meral", Value.fromString(value));
+  }
+
+  get owner(): string {
+    let value = this.get("owner");
+    return value!.toString();
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+
+  get priceFeedId(): BigInt {
+    let value = this.get("priceFeedId");
+    return value!.toBigInt();
+  }
+
+  set priceFeedId(value: BigInt) {
+    this.set("priceFeedId", Value.fromBigInt(value));
+  }
+
+  get positionSize(): BigInt {
+    let value = this.get("positionSize");
+    return value!.toBigInt();
+  }
+
+  set positionSize(value: BigInt) {
+    this.set("positionSize", Value.fromBigInt(value));
+  }
+
+  get startingPrice(): BigInt {
+    let value = this.get("startingPrice");
+    return value!.toBigInt();
+  }
+
+  set startingPrice(value: BigInt) {
+    this.set("startingPrice", Value.fromBigInt(value));
+  }
+
+  get long(): boolean {
+    let value = this.get("long");
+    return value!.toBoolean();
+  }
+
+  set long(value: boolean) {
+    this.set("long", Value.fromBoolean(value));
+  }
+}
+
+export class EBStakeRecord extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+
+    this.set("startTime", Value.fromBigInt(BigInt.zero()));
+    this.set("endTime", Value.fromBigInt(BigInt.zero()));
+    this.set("meral", Value.fromString(""));
+    this.set("owner", Value.fromString(""));
+    this.set("priceFeedId", Value.fromBigInt(BigInt.zero()));
+    this.set("positionSize", Value.fromBigInt(BigInt.zero()));
+    this.set("startingPrice", Value.fromBigInt(BigInt.zero()));
+    this.set("long", Value.fromBoolean(false));
+    this.set("hp", Value.fromBigInt(BigInt.zero()));
+    this.set("elf", Value.fromBigInt(BigInt.zero()));
+    this.set("revived", Value.fromBoolean(false));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save EBStakeRecord entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        "Cannot save EBStakeRecord entity with non-string ID. " +
+          'Considering using .toHex() to convert the "id" to a string.'
+      );
+      store.set("EBStakeRecord", id.toString(), this);
+    }
+  }
+
+  static load(id: string): EBStakeRecord | null {
+    return changetype<EBStakeRecord | null>(store.get("EBStakeRecord", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    return value!.toString();
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get startTime(): BigInt {
+    let value = this.get("startTime");
+    return value!.toBigInt();
+  }
+
+  set startTime(value: BigInt) {
+    this.set("startTime", Value.fromBigInt(value));
+  }
+
+  get endTime(): BigInt {
+    let value = this.get("endTime");
+    return value!.toBigInt();
+  }
+
+  set endTime(value: BigInt) {
+    this.set("endTime", Value.fromBigInt(value));
+  }
+
+  get meral(): string {
+    let value = this.get("meral");
+    return value!.toString();
+  }
+
+  set meral(value: string) {
+    this.set("meral", Value.fromString(value));
+  }
+
+  get owner(): string {
+    let value = this.get("owner");
+    return value!.toString();
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+
+  get priceFeedId(): BigInt {
+    let value = this.get("priceFeedId");
+    return value!.toBigInt();
+  }
+
+  set priceFeedId(value: BigInt) {
+    this.set("priceFeedId", Value.fromBigInt(value));
+  }
+
+  get positionSize(): BigInt {
+    let value = this.get("positionSize");
+    return value!.toBigInt();
+  }
+
+  set positionSize(value: BigInt) {
+    this.set("positionSize", Value.fromBigInt(value));
+  }
+
+  get startingPrice(): BigInt {
+    let value = this.get("startingPrice");
+    return value!.toBigInt();
+  }
+
+  set startingPrice(value: BigInt) {
+    this.set("startingPrice", Value.fromBigInt(value));
+  }
+
+  get long(): boolean {
+    let value = this.get("long");
+    return value!.toBoolean();
+  }
+
+  set long(value: boolean) {
+    this.set("long", Value.fromBoolean(value));
+  }
+
+  get hp(): BigInt {
+    let value = this.get("hp");
+    return value!.toBigInt();
+  }
+
+  set hp(value: BigInt) {
+    this.set("hp", Value.fromBigInt(value));
+  }
+
+  get elf(): BigInt {
+    let value = this.get("elf");
+    return value!.toBigInt();
+  }
+
+  set elf(value: BigInt) {
+    this.set("elf", Value.fromBigInt(value));
+  }
+
+  get revived(): boolean {
+    let value = this.get("revived");
+    return value!.toBoolean();
+  }
+
+  set revived(value: boolean) {
+    this.set("revived", Value.fromBoolean(value));
+  }
+
+  get reviver(): string | null {
+    let value = this.get("reviver");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set reviver(value: string | null) {
+    if (!value) {
+      this.unset("reviver");
+    } else {
+      this.set("reviver", Value.fromString(<string>value));
+    }
   }
 }
 

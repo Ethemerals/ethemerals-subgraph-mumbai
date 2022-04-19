@@ -164,7 +164,7 @@
 		"type": "function"
 	},
 	{
-		"inputs": [{ "internalType": "uint8", "name": "_gameIndex", "type": "uint8" }],
+		"inputs": [{ "internalType": "uint8", "name": "_gamePair", "type": "uint8" }],
 		"name": "getGamePair",
 		"outputs": [
 			{
@@ -182,11 +182,23 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{ "internalType": "uint16", "name": "_gamePair", "type": "uint16" },
+			{ "internalType": "uint32", "name": "_cmId", "type": "uint32" },
+			{ "internalType": "bool", "name": "_long", "type": "bool" }
+		],
+		"name": "getShouldBonus",
+		"outputs": [{ "internalType": "bool", "name": "shouldBonus", "type": "bool" }],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [{ "internalType": "uint256", "name": "_tokenId", "type": "uint256" }],
 		"name": "getStake",
 		"outputs": [
 			{
 				"components": [
+					{ "internalType": "uint256", "name": "timestamp", "type": "uint256" },
 					{ "internalType": "uint16", "name": "priceFeedId", "type": "uint16" },
 					{
 						"internalType": "uint16",
@@ -248,6 +260,18 @@
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{ "internalType": "uint32[]", "name": "_cmIds", "type": "uint32[]" },
+			{ "internalType": "uint16", "name": "_gamePair", "type": "uint16" },
+			{ "internalType": "bool", "name": "_long", "type": "bool" },
+			{ "internalType": "bool", "name": "_bonus", "type": "bool" }
+		],
+		"name": "setCMIDBonus",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [{ "internalType": "address", "name": "_pfAddress", "type": "address" }],
 		"name": "setPriceFeedContract",
 		"outputs": [],
@@ -265,7 +289,8 @@
 		"inputs": [
 			{ "internalType": "uint16", "name": "_atkDivMod", "type": "uint16" },
 			{ "internalType": "uint16", "name": "_defDivMod", "type": "uint16" },
-			{ "internalType": "uint16", "name": "_spdDivMod", "type": "uint16" }
+			{ "internalType": "uint16", "name": "_spdDivMod", "type": "uint16" },
+			{ "internalType": "uint16", "name": "_xpMod", "type": "uint16" }
 		],
 		"name": "setStatsDivMod",
 		"outputs": [],
@@ -275,6 +300,13 @@
 	{
 		"inputs": [],
 		"name": "spdDivMod",
+		"outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "xpMod",
 		"outputs": [{ "internalType": "uint16", "name": "", "type": "uint16" }],
 		"stateMutability": "view",
 		"type": "function"

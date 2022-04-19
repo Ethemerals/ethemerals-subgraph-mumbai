@@ -17,10 +17,11 @@ import {
 	ChangeXP,
 	ContractRegistered,
 	InitMeral,
-	OwnershipTransferred,
 	Transfer,
 	MeralStatusChange,
 	MeralOwnerChange,
+	ChangeCMID,
+	ChangeMax,
 } from '../../generated/MeralManager/MeralManager';
 
 import { Account, AccountAction } from '../../generated/schema';
@@ -94,8 +95,6 @@ export function handleChangeXP(event: ChangeXP): void {
 	token.xp = event.params.xp;
 	token.save();
 }
-
-export function handleOwnershipTransferred(event: OwnershipTransferred): void {}
 
 export function handleMeralStatusChange(event: MeralStatusChange): void {
 	let token = ensureMeral(event, event.params.id);
@@ -224,3 +223,7 @@ export function handleInitMeral(event: InitMeral): void {
 	scorecard.save();
 	creator.save();
 }
+
+export function handleChangeCMID(event: ChangeCMID): void {}
+
+export function handleChangeMax(event: ChangeMax): void {}

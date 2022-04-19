@@ -131,20 +131,24 @@ export class EternalBattle__getGamePairResultValue0Struct extends ethereum.Tuple
 }
 
 export class EternalBattle__getStakeResultValue0Struct extends ethereum.Tuple {
-  get priceFeedId(): i32 {
-    return this[0].toI32();
+  get timestamp(): BigInt {
+    return this[0].toBigInt();
   }
 
-  get positionSize(): i32 {
+  get priceFeedId(): i32 {
     return this[1].toI32();
   }
 
+  get positionSize(): i32 {
+    return this[2].toI32();
+  }
+
   get startingPrice(): BigInt {
-    return this[2].toBigInt();
+    return this[3].toBigInt();
   }
 
   get long(): boolean {
-    return this[3].toBoolean();
+    return this[4].toBoolean();
   }
 }
 
@@ -243,11 +247,11 @@ export class EternalBattle extends ethereum.SmartContract {
     );
   }
 
-  getGamePair(_gameIndex: i32): EternalBattle__getGamePairResultValue0Struct {
+  getGamePair(_gamePair: i32): EternalBattle__getGamePairResultValue0Struct {
     let result = super.call(
       "getGamePair",
       "getGamePair(uint8):((bool,uint16,uint16))",
-      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_gameIndex))]
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_gamePair))]
     );
 
     return changetype<EternalBattle__getGamePairResultValue0Struct>(
@@ -256,12 +260,12 @@ export class EternalBattle extends ethereum.SmartContract {
   }
 
   try_getGamePair(
-    _gameIndex: i32
+    _gamePair: i32
   ): ethereum.CallResult<EternalBattle__getGamePairResultValue0Struct> {
     let result = super.tryCall(
       "getGamePair",
       "getGamePair(uint8):((bool,uint16,uint16))",
-      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_gameIndex))]
+      [ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_gamePair))]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -274,10 +278,45 @@ export class EternalBattle extends ethereum.SmartContract {
     );
   }
 
+  getShouldBonus(_gamePair: i32, _cmId: BigInt, _long: boolean): boolean {
+    let result = super.call(
+      "getShouldBonus",
+      "getShouldBonus(uint16,uint32,bool):(bool)",
+      [
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_gamePair)),
+        ethereum.Value.fromUnsignedBigInt(_cmId),
+        ethereum.Value.fromBoolean(_long)
+      ]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_getShouldBonus(
+    _gamePair: i32,
+    _cmId: BigInt,
+    _long: boolean
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "getShouldBonus",
+      "getShouldBonus(uint16,uint32,bool):(bool)",
+      [
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(_gamePair)),
+        ethereum.Value.fromUnsignedBigInt(_cmId),
+        ethereum.Value.fromBoolean(_long)
+      ]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
   getStake(_tokenId: BigInt): EternalBattle__getStakeResultValue0Struct {
     let result = super.call(
       "getStake",
-      "getStake(uint256):((uint16,uint16,uint256,bool))",
+      "getStake(uint256):((uint256,uint16,uint16,uint256,bool))",
       [ethereum.Value.fromUnsignedBigInt(_tokenId)]
     );
 
@@ -291,7 +330,7 @@ export class EternalBattle extends ethereum.SmartContract {
   ): ethereum.CallResult<EternalBattle__getStakeResultValue0Struct> {
     let result = super.tryCall(
       "getStake",
-      "getStake(uint256):((uint16,uint16,uint256,bool))",
+      "getStake(uint256):((uint256,uint16,uint16,uint256,bool))",
       [ethereum.Value.fromUnsignedBigInt(_tokenId)]
     );
     if (result.reverted) {
@@ -369,6 +408,21 @@ export class EternalBattle extends ethereum.SmartContract {
 
   try_spdDivMod(): ethereum.CallResult<i32> {
     let result = super.tryCall("spdDivMod", "spdDivMod():(uint16)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toI32());
+  }
+
+  xpMod(): i32 {
+    let result = super.call("xpMod", "xpMod():(uint16)", []);
+
+    return result[0].toI32();
+  }
+
+  try_xpMod(): ethereum.CallResult<i32> {
+    let result = super.tryCall("xpMod", "xpMod():(uint16)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
@@ -627,6 +681,48 @@ export class ReviveTokenCall__Outputs {
   }
 }
 
+export class SetCMIDBonusCall extends ethereum.Call {
+  get inputs(): SetCMIDBonusCall__Inputs {
+    return new SetCMIDBonusCall__Inputs(this);
+  }
+
+  get outputs(): SetCMIDBonusCall__Outputs {
+    return new SetCMIDBonusCall__Outputs(this);
+  }
+}
+
+export class SetCMIDBonusCall__Inputs {
+  _call: SetCMIDBonusCall;
+
+  constructor(call: SetCMIDBonusCall) {
+    this._call = call;
+  }
+
+  get _cmIds(): Array<BigInt> {
+    return this._call.inputValues[0].value.toBigIntArray();
+  }
+
+  get _gamePair(): i32 {
+    return this._call.inputValues[1].value.toI32();
+  }
+
+  get _long(): boolean {
+    return this._call.inputValues[2].value.toBoolean();
+  }
+
+  get _bonus(): boolean {
+    return this._call.inputValues[3].value.toBoolean();
+  }
+}
+
+export class SetCMIDBonusCall__Outputs {
+  _call: SetCMIDBonusCall;
+
+  constructor(call: SetCMIDBonusCall) {
+    this._call = call;
+  }
+}
+
 export class SetPriceFeedContractCall extends ethereum.Call {
   get inputs(): SetPriceFeedContractCall__Inputs {
     return new SetPriceFeedContractCall__Inputs(this);
@@ -714,6 +810,10 @@ export class SetStatsDivModCall__Inputs {
 
   get _spdDivMod(): i32 {
     return this._call.inputValues[2].value.toI32();
+  }
+
+  get _xpMod(): i32 {
+    return this._call.inputValues[3].value.toI32();
   }
 }
 

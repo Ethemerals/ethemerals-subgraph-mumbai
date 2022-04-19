@@ -84,6 +84,28 @@ export class AuthChange__Params {
   }
 }
 
+export class ChangeCMID extends ethereum.Event {
+  get params(): ChangeCMID__Params {
+    return new ChangeCMID__Params(this);
+  }
+}
+
+export class ChangeCMID__Params {
+  _event: ChangeCMID;
+
+  constructor(event: ChangeCMID) {
+    this._event = event;
+  }
+
+  get id(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get cmId(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+}
+
 export class ChangeELF extends ethereum.Event {
   get params(): ChangeELF__Params {
     return new ChangeELF__Params(this);
@@ -155,6 +177,32 @@ export class ChangeHP__Params {
 
   get add(): boolean {
     return this._event.parameters[2].value.toBoolean();
+  }
+}
+
+export class ChangeMax extends ethereum.Event {
+  get params(): ChangeMax__Params {
+    return new ChangeMax__Params(this);
+  }
+}
+
+export class ChangeMax__Params {
+  _event: ChangeMax;
+
+  constructor(event: ChangeMax) {
+    this._event = event;
+  }
+
+  get id(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get maxHp(): i32 {
+    return this._event.parameters[1].value.toI32();
+  }
+
+  get maxStamina(): i32 {
+    return this._event.parameters[2].value.toI32();
   }
 }
 
@@ -257,15 +305,15 @@ export class InitMeral__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get elf(): BigInt {
+  get cmId(): BigInt {
     return this._event.parameters[2].value.toBigInt();
   }
 
-  get hp(): i32 {
-    return this._event.parameters[3].value.toI32();
+  get elf(): BigInt {
+    return this._event.parameters[3].value.toBigInt();
   }
 
-  get maxHp(): i32 {
+  get hp(): i32 {
     return this._event.parameters[4].value.toI32();
   }
 
@@ -342,28 +390,6 @@ export class MeralStatusChange__Params {
   }
 }
 
-export class OwnershipTransferred extends ethereum.Event {
-  get params(): OwnershipTransferred__Params {
-    return new OwnershipTransferred__Params(this);
-  }
-}
-
-export class OwnershipTransferred__Params {
-  _event: OwnershipTransferred;
-
-  constructor(event: OwnershipTransferred) {
-    this._event = event;
-  }
-
-  get previousOwner(): Address {
-    return this._event.parameters[0].value.toAddress();
-  }
-
-  get newOwner(): Address {
-    return this._event.parameters[1].value.toAddress();
-  }
-}
-
 export class Transfer extends ethereum.Event {
   get params(): Transfer__Params {
     return new Transfer__Params(this);
@@ -393,7 +419,7 @@ export class Transfer__Params {
 export class MeralManager__allMeralsResult {
   value0: BigInt;
   value1: BigInt;
-  value2: i32;
+  value2: BigInt;
   value3: i32;
   value4: i32;
   value5: i32;
@@ -402,11 +428,12 @@ export class MeralManager__allMeralsResult {
   value8: i32;
   value9: i32;
   value10: i32;
+  value11: i32;
 
   constructor(
     value0: BigInt,
     value1: BigInt,
-    value2: i32,
+    value2: BigInt,
     value3: i32,
     value4: i32,
     value5: i32,
@@ -414,7 +441,8 @@ export class MeralManager__allMeralsResult {
     value7: i32,
     value8: i32,
     value9: i32,
-    value10: i32
+    value10: i32,
+    value11: i32
   ) {
     this.value0 = value0;
     this.value1 = value1;
@@ -427,16 +455,14 @@ export class MeralManager__allMeralsResult {
     this.value8 = value8;
     this.value9 = value9;
     this.value10 = value10;
+    this.value11 = value11;
   }
 
   toMap(): TypedMap<string, ethereum.Value> {
     let map = new TypedMap<string, ethereum.Value>();
     map.set("value0", ethereum.Value.fromUnsignedBigInt(this.value0));
     map.set("value1", ethereum.Value.fromUnsignedBigInt(this.value1));
-    map.set(
-      "value2",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value2))
-    );
+    map.set("value2", ethereum.Value.fromUnsignedBigInt(this.value2));
     map.set(
       "value3",
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value3))
@@ -469,145 +495,161 @@ export class MeralManager__allMeralsResult {
       "value10",
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value10))
     );
+    map.set(
+      "value11",
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(this.value11))
+    );
     return map;
   }
 }
 
 export class MeralManager__getMeralByContractAndTokenIdResultValue0Struct extends ethereum.Tuple {
-  get elf(): BigInt {
+  get cmId(): BigInt {
     return this[0].toBigInt();
   }
 
-  get xp(): BigInt {
+  get elf(): BigInt {
     return this[1].toBigInt();
   }
 
-  get hp(): i32 {
-    return this[2].toI32();
+  get xp(): BigInt {
+    return this[2].toBigInt();
   }
 
-  get maxHp(): i32 {
+  get hp(): i32 {
     return this[3].toI32();
   }
 
-  get atk(): i32 {
+  get maxHp(): i32 {
     return this[4].toI32();
   }
 
-  get def(): i32 {
+  get atk(): i32 {
     return this[5].toI32();
   }
 
-  get spd(): i32 {
+  get def(): i32 {
     return this[6].toI32();
   }
 
-  get maxStamina(): i32 {
+  get spd(): i32 {
     return this[7].toI32();
   }
 
-  get element(): i32 {
+  get maxStamina(): i32 {
     return this[8].toI32();
   }
 
-  get subclass(): i32 {
+  get element(): i32 {
     return this[9].toI32();
   }
 
-  get status(): i32 {
+  get subclass(): i32 {
     return this[10].toI32();
+  }
+
+  get status(): i32 {
+    return this[11].toI32();
   }
 }
 
 export class MeralManager__getMeralByIdResultValue0Struct extends ethereum.Tuple {
-  get elf(): BigInt {
+  get cmId(): BigInt {
     return this[0].toBigInt();
   }
 
-  get xp(): BigInt {
+  get elf(): BigInt {
     return this[1].toBigInt();
   }
 
-  get hp(): i32 {
-    return this[2].toI32();
+  get xp(): BigInt {
+    return this[2].toBigInt();
   }
 
-  get maxHp(): i32 {
+  get hp(): i32 {
     return this[3].toI32();
   }
 
-  get atk(): i32 {
+  get maxHp(): i32 {
     return this[4].toI32();
   }
 
-  get def(): i32 {
+  get atk(): i32 {
     return this[5].toI32();
   }
 
-  get spd(): i32 {
+  get def(): i32 {
     return this[6].toI32();
   }
 
-  get maxStamina(): i32 {
+  get spd(): i32 {
     return this[7].toI32();
   }
 
-  get element(): i32 {
+  get maxStamina(): i32 {
     return this[8].toI32();
   }
 
-  get subclass(): i32 {
+  get element(): i32 {
     return this[9].toI32();
   }
 
-  get status(): i32 {
+  get subclass(): i32 {
     return this[10].toI32();
+  }
+
+  get status(): i32 {
+    return this[11].toI32();
   }
 }
 
 export class MeralManager__getMeralByTypeResultValue0Struct extends ethereum.Tuple {
-  get elf(): BigInt {
+  get cmId(): BigInt {
     return this[0].toBigInt();
   }
 
-  get xp(): BigInt {
+  get elf(): BigInt {
     return this[1].toBigInt();
   }
 
-  get hp(): i32 {
-    return this[2].toI32();
+  get xp(): BigInt {
+    return this[2].toBigInt();
   }
 
-  get maxHp(): i32 {
+  get hp(): i32 {
     return this[3].toI32();
   }
 
-  get atk(): i32 {
+  get maxHp(): i32 {
     return this[4].toI32();
   }
 
-  get def(): i32 {
+  get atk(): i32 {
     return this[5].toI32();
   }
 
-  get spd(): i32 {
+  get def(): i32 {
     return this[6].toI32();
   }
 
-  get maxStamina(): i32 {
+  get spd(): i32 {
     return this[7].toI32();
   }
 
-  get element(): i32 {
+  get maxStamina(): i32 {
     return this[8].toI32();
   }
 
-  get subclass(): i32 {
+  get element(): i32 {
     return this[9].toI32();
   }
 
-  get status(): i32 {
+  get subclass(): i32 {
     return this[10].toI32();
+  }
+
+  get status(): i32 {
+    return this[11].toI32();
   }
 }
 
@@ -619,14 +661,14 @@ export class MeralManager extends ethereum.SmartContract {
   allMerals(param0: BigInt): MeralManager__allMeralsResult {
     let result = super.call(
       "allMerals",
-      "allMerals(uint256):(uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8)",
+      "allMerals(uint256):(uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
 
     return new MeralManager__allMeralsResult(
       result[0].toBigInt(),
       result[1].toBigInt(),
-      result[2].toI32(),
+      result[2].toBigInt(),
       result[3].toI32(),
       result[4].toI32(),
       result[5].toI32(),
@@ -634,7 +676,8 @@ export class MeralManager extends ethereum.SmartContract {
       result[7].toI32(),
       result[8].toI32(),
       result[9].toI32(),
-      result[10].toI32()
+      result[10].toI32(),
+      result[11].toI32()
     );
   }
 
@@ -643,7 +686,7 @@ export class MeralManager extends ethereum.SmartContract {
   ): ethereum.CallResult<MeralManager__allMeralsResult> {
     let result = super.tryCall(
       "allMerals",
-      "allMerals(uint256):(uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8)",
+      "allMerals(uint256):(uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8)",
       [ethereum.Value.fromUnsignedBigInt(param0)]
     );
     if (result.reverted) {
@@ -654,7 +697,7 @@ export class MeralManager extends ethereum.SmartContract {
       new MeralManager__allMeralsResult(
         value[0].toBigInt(),
         value[1].toBigInt(),
-        value[2].toI32(),
+        value[2].toBigInt(),
         value[3].toI32(),
         value[4].toI32(),
         value[5].toI32(),
@@ -662,7 +705,8 @@ export class MeralManager extends ethereum.SmartContract {
         value[7].toI32(),
         value[8].toI32(),
         value[9].toI32(),
-        value[10].toI32()
+        value[10].toI32(),
+        value[11].toI32()
       )
     );
   }
@@ -764,7 +808,7 @@ export class MeralManager extends ethereum.SmartContract {
   ): MeralManager__getMeralByContractAndTokenIdResultValue0Struct {
     let result = super.call(
       "getMeralByContractAndTokenId",
-      "getMeralByContractAndTokenId(address,uint256):((uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
+      "getMeralByContractAndTokenId(address,uint256):((uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
       [
         ethereum.Value.fromAddress(contractAddress),
         ethereum.Value.fromUnsignedBigInt(_tokenId)
@@ -784,7 +828,7 @@ export class MeralManager extends ethereum.SmartContract {
   > {
     let result = super.tryCall(
       "getMeralByContractAndTokenId",
-      "getMeralByContractAndTokenId(address,uint256):((uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
+      "getMeralByContractAndTokenId(address,uint256):((uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
       [
         ethereum.Value.fromAddress(contractAddress),
         ethereum.Value.fromUnsignedBigInt(_tokenId)
@@ -804,7 +848,7 @@ export class MeralManager extends ethereum.SmartContract {
   getMeralById(_id: BigInt): MeralManager__getMeralByIdResultValue0Struct {
     let result = super.call(
       "getMeralById",
-      "getMeralById(uint256):((uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
+      "getMeralById(uint256):((uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
       [ethereum.Value.fromUnsignedBigInt(_id)]
     );
 
@@ -818,7 +862,7 @@ export class MeralManager extends ethereum.SmartContract {
   ): ethereum.CallResult<MeralManager__getMeralByIdResultValue0Struct> {
     let result = super.tryCall(
       "getMeralById",
-      "getMeralById(uint256):((uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
+      "getMeralById(uint256):((uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
       [ethereum.Value.fromUnsignedBigInt(_id)]
     );
     if (result.reverted) {
@@ -838,7 +882,7 @@ export class MeralManager extends ethereum.SmartContract {
   ): MeralManager__getMeralByTypeResultValue0Struct {
     let result = super.call(
       "getMeralByType",
-      "getMeralByType(uint256,uint256):((uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
+      "getMeralByType(uint256,uint256):((uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
       [
         ethereum.Value.fromUnsignedBigInt(_type),
         ethereum.Value.fromUnsignedBigInt(_tokenId)
@@ -856,7 +900,7 @@ export class MeralManager extends ethereum.SmartContract {
   ): ethereum.CallResult<MeralManager__getMeralByTypeResultValue0Struct> {
     let result = super.tryCall(
       "getMeralByType",
-      "getMeralByType(uint256,uint256):((uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
+      "getMeralByType(uint256,uint256):((uint32,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,uint8))",
       [
         ethereum.Value.fromUnsignedBigInt(_type),
         ethereum.Value.fromUnsignedBigInt(_tokenId)
@@ -1128,38 +1172,6 @@ export class MeralManager extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 
-  ownerOfByType(_type: BigInt, _tokenId: BigInt): Address {
-    let result = super.call(
-      "ownerOfByType",
-      "ownerOfByType(uint256,uint256):(address)",
-      [
-        ethereum.Value.fromUnsignedBigInt(_type),
-        ethereum.Value.fromUnsignedBigInt(_tokenId)
-      ]
-    );
-
-    return result[0].toAddress();
-  }
-
-  try_ownerOfByType(
-    _type: BigInt,
-    _tokenId: BigInt
-  ): ethereum.CallResult<Address> {
-    let result = super.tryCall(
-      "ownerOfByType",
-      "ownerOfByType(uint256,uint256):(address)",
-      [
-        ethereum.Value.fromUnsignedBigInt(_type),
-        ethereum.Value.fromUnsignedBigInt(_tokenId)
-      ]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
   supportsInterface(interfaceId: Bytes): boolean {
     let result = super.call(
       "supportsInterface",
@@ -1414,6 +1426,40 @@ export class BurnCall__Outputs {
   }
 }
 
+export class ChangeCMIDCall extends ethereum.Call {
+  get inputs(): ChangeCMIDCall__Inputs {
+    return new ChangeCMIDCall__Inputs(this);
+  }
+
+  get outputs(): ChangeCMIDCall__Outputs {
+    return new ChangeCMIDCall__Outputs(this);
+  }
+}
+
+export class ChangeCMIDCall__Inputs {
+  _call: ChangeCMIDCall;
+
+  constructor(call: ChangeCMIDCall) {
+    this._call = call;
+  }
+
+  get _id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get _cmId(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class ChangeCMIDCall__Outputs {
+  _call: ChangeCMIDCall;
+
+  constructor(call: ChangeCMIDCall) {
+    this._call = call;
+  }
+}
+
 export class ChangeELFCall extends ethereum.Call {
   get inputs(): ChangeELFCall__Inputs {
     return new ChangeELFCall__Inputs(this);
@@ -1520,6 +1566,44 @@ export class ChangeHPCall__Outputs {
   _call: ChangeHPCall;
 
   constructor(call: ChangeHPCall) {
+    this._call = call;
+  }
+}
+
+export class ChangeMaxCall extends ethereum.Call {
+  get inputs(): ChangeMaxCall__Inputs {
+    return new ChangeMaxCall__Inputs(this);
+  }
+
+  get outputs(): ChangeMaxCall__Outputs {
+    return new ChangeMaxCall__Outputs(this);
+  }
+}
+
+export class ChangeMaxCall__Inputs {
+  _call: ChangeMaxCall;
+
+  constructor(call: ChangeMaxCall) {
+    this._call = call;
+  }
+
+  get _id(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+
+  get _maxHp(): i32 {
+    return this._call.inputValues[1].value.toI32();
+  }
+
+  get _maxStamina(): i32 {
+    return this._call.inputValues[2].value.toI32();
+  }
+}
+
+export class ChangeMaxCall__Outputs {
+  _call: ChangeMaxCall;
+
+  constructor(call: ChangeMaxCall) {
     this._call = call;
   }
 }
@@ -1723,32 +1807,36 @@ export class RegisterMeralCall__Inputs {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get _hp(): i32 {
-    return this._call.inputValues[2].value.toI32();
+  get _cmId(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
   }
 
   get _elf(): BigInt {
     return this._call.inputValues[3].value.toBigInt();
   }
 
-  get _atk(): i32 {
+  get _hp(): i32 {
     return this._call.inputValues[4].value.toI32();
   }
 
-  get _def(): i32 {
+  get _atk(): i32 {
     return this._call.inputValues[5].value.toI32();
   }
 
-  get _spd(): i32 {
+  get _def(): i32 {
     return this._call.inputValues[6].value.toI32();
   }
 
-  get _element(): i32 {
+  get _spd(): i32 {
     return this._call.inputValues[7].value.toI32();
   }
 
-  get _subclass(): i32 {
+  get _element(): i32 {
     return this._call.inputValues[8].value.toI32();
+  }
+
+  get _subclass(): i32 {
+    return this._call.inputValues[9].value.toI32();
   }
 }
 
@@ -1756,32 +1844,6 @@ export class RegisterMeralCall__Outputs {
   _call: RegisterMeralCall;
 
   constructor(call: RegisterMeralCall) {
-    this._call = call;
-  }
-}
-
-export class RenounceOwnershipCall extends ethereum.Call {
-  get inputs(): RenounceOwnershipCall__Inputs {
-    return new RenounceOwnershipCall__Inputs(this);
-  }
-
-  get outputs(): RenounceOwnershipCall__Outputs {
-    return new RenounceOwnershipCall__Outputs(this);
-  }
-}
-
-export class RenounceOwnershipCall__Inputs {
-  _call: RenounceOwnershipCall;
-
-  constructor(call: RenounceOwnershipCall) {
-    this._call = call;
-  }
-}
-
-export class RenounceOwnershipCall__Outputs {
-  _call: RenounceOwnershipCall;
-
-  constructor(call: RenounceOwnershipCall) {
     this._call = call;
   }
 }

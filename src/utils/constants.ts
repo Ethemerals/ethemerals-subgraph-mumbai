@@ -16,7 +16,7 @@ export let ZERO_BD = BigDecimal.fromString('0');
 export let ONE_BD = BigDecimal.fromString('1');
 export let BI_18 = BigInt.fromI32(18);
 
-export let MERALMANAGER_ADDRESS = '0xaa74accf2a56bff87c252592e0409371928d302a';
-export let ETERNALBATTLE_ADDRESS = '0x0a062800914b868df5836f755bfef04b64ca23c6';
+export let MERALMANAGER_ADDRESS = '0xdfc671c7c8deb5d6e59bb94353d1babebb7f09da';
+export let ETERNALBATTLE_ADDRESS = '0x84029d941e3b8f72af91dda58bfa9502154a8402';
 export let BURN_ADDRESS = '0x13d8ee49cba2eb416584806b8d370ff432ff5a03';
 export let coreContract = MeralManager.bind(Address.fromString(MERALMANAGER_ADDRESS));

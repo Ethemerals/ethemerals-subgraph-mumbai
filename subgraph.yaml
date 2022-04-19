@@ -70,7 +70,7 @@ dataSources:
     name: EternalBattle
     network: mumbai
     source:
-      address: '0x0af057df19288ffddd4f5bb7eb882f93a172454b'
+      address: '0x84029d941e3b8f72af91dda58bfa9502154a8402'
       abi: EternalBattle
       startBlock: 25995004
     mapping:

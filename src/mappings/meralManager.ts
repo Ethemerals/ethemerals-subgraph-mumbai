@@ -20,6 +20,7 @@ import {
 	OwnershipTransferred,
 	Transfer,
 	MeralStatusChange,
+	MeralOwnerChange,
 } from '../../generated/MeralManager/MeralManager';
 
 import { Account, AccountAction } from '../../generated/schema';
@@ -55,6 +56,8 @@ export function handleApproval(event: Approval): void {
 	// - contract.tokenURI(...)
 	// - contract.typeCounter(...)
 }
+
+export function handleMeralOwnerChange(event: MeralOwnerChange): void {}
 
 export function handleApprovalForAll(event: ApprovalForAll): void {}
 
@@ -133,9 +136,9 @@ export function handleTransfer(event: Transfer): void {
 		token.verifiedOwner = accountTo.id;
 		token.status = BigInt.fromI32(2);
 		tokenAction.type = 'Minted';
-		tokenAction.description = `Birthed by ${accountTo.id}`;
+		tokenAction.description = `Proxied by ${accountTo.id}`;
 		accountToAction.type = 'Minted';
-		accountToAction.description = `Minted Meral #${token.tokenId}`;
+		accountToAction.description = `Proxied Meral #${token.tokenId}`;
 	}
 
 	// BURN

@@ -6,9 +6,9 @@ dataSources:
     name: MeralManager
     network: mumbai
     source:
-      address: '0x8a4b0e3aedce2aa5303b85849c61e463750af152'
+      address: '0xaa74accf2a56bff87c252592e0409371928d302a'
       abi: MeralManager
-      startBlock: 25736956
+      startBlock: 25749351
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -24,6 +24,7 @@ dataSources:
         - ChangeXP
         - ContractRegistered
         - InitMeral
+        - MeralOwnerChange
         - MeralStatusChange
         - OwnershipTransferred
         - Transfer
@@ -51,6 +52,8 @@ dataSources:
           handler: handleContractRegistered
         - event: InitMeral(uint256,uint256,uint32,uint16,uint16,uint16,uint16,uint16,uint16,uint8,uint8,address)
           handler: handleInitMeral
+        - event: MeralOwnerChange(uint256,address)
+          handler: handleMeralOwnerChange
         - event: MeralStatusChange(uint256,uint8)
           handler: handleMeralStatusChange
         - event: OwnershipTransferred(indexed address,indexed address)
@@ -64,9 +67,9 @@ dataSources:
     name: EternalBattle
     network: mumbai
     source:
-      address: '0xAb2bb84f7a4a1739ab34Ef8105798bc331b6A084'
+      address: '0x0a062800914b868df5836f755bfef04b64ca23c6'
       abi: EternalBattle
-      startBlock: 25715613
+      startBlock: 25749377
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

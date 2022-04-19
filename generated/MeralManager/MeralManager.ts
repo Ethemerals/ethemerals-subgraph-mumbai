@@ -298,6 +298,28 @@ export class InitMeral__Params {
   }
 }
 
+export class MeralOwnerChange extends ethereum.Event {
+  get params(): MeralOwnerChange__Params {
+    return new MeralOwnerChange__Params(this);
+  }
+}
+
+export class MeralOwnerChange__Params {
+  _event: MeralOwnerChange;
+
+  constructor(event: MeralOwnerChange) {
+    this._event = event;
+  }
+
+  get id(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get newOwner(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+}
+
 export class MeralStatusChange extends ethereum.Event {
   get params(): MeralStatusChange__Params {
     return new MeralStatusChange__Params(this);

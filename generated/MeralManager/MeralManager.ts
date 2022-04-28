@@ -329,20 +329,16 @@ export class InitMeral__Params {
     return this._event.parameters[7].value.toI32();
   }
 
-  get maxStamina(): i32 {
+  get element(): i32 {
     return this._event.parameters[8].value.toI32();
   }
 
-  get element(): i32 {
+  get subclass(): i32 {
     return this._event.parameters[9].value.toI32();
   }
 
-  get subclass(): i32 {
-    return this._event.parameters[10].value.toI32();
-  }
-
   get owner(): Address {
-    return this._event.parameters[11].value.toAddress();
+    return this._event.parameters[10].value.toAddress();
   }
 }
 

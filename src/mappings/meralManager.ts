@@ -206,9 +206,9 @@ export function handleInitMeral(event: InitMeral): void {
 	token.atk = BigInt.fromI32(event.params.atk);
 	token.def = BigInt.fromI32(event.params.def);
 	token.spd = BigInt.fromI32(event.params.spd);
+	token.cmId = event.params.cmId;
 
 	if (token.type == ONE_BI) {
-		token.cmId = getCmId(token.tokenId);
 		token.coin = getCoin(token.tokenId);
 		token.name = getCoin(token.tokenId);
 	}

@@ -6,9 +6,9 @@ dataSources:
     name: MeralManager
     network: mumbai
     source:
-      address: '0xdfc671c7c8deb5d6e59bb94353d1babebb7f09da'
+      address: '0xc992e5b95f27f7dbd4f0fc33ad399cd1224844b5'
       abi: MeralManager
-      startBlock: 25994978
+      startBlock: 26115052
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
@@ -37,7 +37,7 @@ dataSources:
           handler: handleApproval
         - event: ApprovalForAll(indexed address,indexed address,bool)
           handler: handleApprovalForAll
-        - event: AuthChange(address,bool)
+        - event: AuthChange(address,uint256,bool)
           handler: handleAuthChange
         - event: ChangeCMID(uint256,uint32)
           handler: handleChangeCMID
@@ -55,7 +55,7 @@ dataSources:
           handler: handleChangeXP
         - event: ContractRegistered(address,uint256)
           handler: handleContractRegistered
-        - event: InitMeral(uint256,uint256,uint32,uint32,uint16,uint16,uint16,uint16,uint16,uint8,uint8,address)
+        - event: InitMeral(uint256,uint256,uint32,uint32,uint16,uint16,uint16,uint16,uint8,uint8,address)
           handler: handleInitMeral
         - event: MeralOwnerChange(uint256,address)
           handler: handleMeralOwnerChange
@@ -70,9 +70,9 @@ dataSources:
     name: EternalBattle
     network: mumbai
     source:
-      address: '0x84029d941e3b8f72af91dda58bfa9502154a8402'
+      address: '0x217a369731ea714bc7e8041153ed6f54a20fdbba'
       abi: EternalBattle
-      startBlock: 25995004
+      startBlock: 26115102
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5

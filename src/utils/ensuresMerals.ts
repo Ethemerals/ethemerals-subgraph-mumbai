@@ -55,8 +55,8 @@ export function newMeral(event: ethereum.Event, meralId: BigInt): Meral {
 	meral.spd = ZERO_BI;
 	meral.maxStamina = INI_MAXSTAM;
 	// METADATA
-	meral.cmId = getCmId(ONE_BI);
-	meral.coin = getCoin(ONE_BI);
+	meral.cmId = ZERO_BI;
+	meral.coin = '';
 	meral.name = '';
 	meral.element = getElement(ONE_BI);
 	meral.mainclass = getMainclass(ONE_BI);

@@ -70,9 +70,9 @@ dataSources:
     name: EternalBattle
     network: mumbai
     source:
-      address: '0x217a369731ea714bc7e8041153ed6f54a20fdbba'
+      address: '0xb2928128b426a8c6a8b69e99199579d36d5b9d7e'
       abi: EternalBattle
-      startBlock: 26115102
+      startBlock: 26121420
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
